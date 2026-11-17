@@ -34,7 +34,6 @@
             color: #0f172a;
             -webkit-font-smoothing: antialiased;
         }
-        /* 커스텀 스크롤바 */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -49,13 +48,11 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-        /* 은은한 카드 그림자 */
         .notion-card {
             background: #ffffff;
             border: 1px solid #e2e8f0;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
         }
-        /* 애니메이션 */
         @keyframes pulse-subtle {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.6; }
@@ -107,7 +104,7 @@
             <div class="flex items-start sm:items-center gap-3">
                 <span class="text-lg">💡</span>
                 <p class="text-xs sm:text-sm text-indigo-900 leading-relaxed">
-                    현재 <strong>체험 모드 (스마트 규칙 엔진)</strong>로 동작 중입니다. 어떤 반말/구어체를 넣어도 자연스러운 비즈니스 문장으로 재구성되며, 우측 상단 <strong>[API 설정]</strong>에서 Gemini 키를 등록하면 실제 AI 모델로 동작합니다.
+                    현재 <strong>체험 모드 (스마트 규칙 엔진)</strong>로 동작 중입니다. 어떤 반말/구어체를 넣어도 자연스러운 비즈니스 문장으로 재구성되며, 우측 상단 <strong>[API 설정]</strong>에서 개인 Gmail의 Gemini 키를 등록하면 실제 AI 모델로 동작합니다.
                 </p>
             </div>
             <button onclick="openSettingsModal()" class="self-start sm:self-center shrink-0 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-white px-3 py-1.5 rounded-lg border border-indigo-200 shadow-2xs transition">
@@ -254,9 +251,8 @@
                         <input 
                             type="text" 
                             id="outputSubject" 
-                            readonly 
                             value="[요청] 전달주신 자료 파일 재송부 요청의 건"
-                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-medium text-slate-800 focus:outline-none"
+                            class="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3.5 py-2.5 text-sm font-medium text-slate-800 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition"
                         >
                     </div>
                 </div>
@@ -316,7 +312,7 @@
     </main>
 
     <!-- API 설정 모달 -->
-    <div id="settingsModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div id="settingsModal" onclick="if(event.target === this) closeSettingsModal()" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200 space-y-5 animate-fade-in">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-2">
@@ -359,9 +355,14 @@
 
                 <!-- API Key 입력 -->
                 <div>
-                    <label for="apiKeyInput" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                        Gemini API Key
-                    </label>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="apiKeyInput" class="block text-xs font-semibold text-slate-700">
+                            Gemini API Key (개인 Gmail 권장)
+                        </label>
+                        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-[11px] font-medium text-indigo-600 hover:underline">
+                            키 발급받기 ↗
+                        </a>
+                    </div>
                     <input 
                         type="password" 
                         id="apiKeyInput" 
@@ -369,7 +370,7 @@
                         class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none"
                     >
                     <p class="text-[11px] text-slate-500 mt-1.5 leading-relaxed">
-                        입력한 키는 서버로 전송되지 않고 <strong>내 브라우저(localStorage)</strong>에만 안전하게 저장됩니다. 비워두면 체험 모드로 작동합니다.
+                        입력한 키는 서버로 전송되지 않고 <strong>내 브라우저(localStorage)</strong>에만 안전하게 저장됩니다. (학교/회사 계정은 무료 등급이 제한될 수 있으니 개인 <code>@gmail.com</code> 계정을 권장합니다.)
                     </p>
                 </div>
 
@@ -379,15 +380,15 @@
                         사용할 모델 선택
                     </label>
                     <select id="modelSelect" onchange="toggleCustomModelInput()" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:border-indigo-500 outline-none">
-                        <option value="gemini-4-hydrogen">gemini-4-hydrogen (추천 - 빠르고 자연스러운 비즈니스 문체)</option>
-                        <option value="gemini-2.5-flash">gemini-2.5-flash (초고속 범용 모델)</option>
+                        <option value="gemini-3.8-flash">gemini-3.8-flash (추천 - 초고속·무료 등급 지원)</option>
+                        <option value="gemini-2.5-flash">gemini-2.5-flash (기존 사용자용 범용 모델)</option>
                         <option value="gemini-2.5-pro">gemini-2.5-pro (정교한 뉘앙스 파악)</option>
                         <option value="custom">직접 모델명 입력...</option>
                     </select>
                     <input 
                         type="text" 
                         id="customModelInput" 
-                        placeholder="예: gemini-4-hydrogen"
+                        placeholder="예: gemini-3.8-flash"
                         class="hidden mt-2 w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-indigo-500 outline-none"
                     >
                 </div>
@@ -428,10 +429,10 @@
     </div>
 
     <!-- 토스트 알림 컨테이너 -->
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 translate-y-2">
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 translate-y-2 max-w-[92vw]">
         <div class="bg-slate-900 text-white text-xs sm:text-sm font-medium px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2">
-            <span id="toastIcon">✅</span>
-            <span id="toastMessage">클립보드에 복사되었습니다!</span>
+            <span id="toastIcon" class="shrink-0">✅</span>
+            <span id="toastMessage" class="break-words">클립보드에 복사되었습니다!</span>
         </div>
     </div>
 
@@ -440,6 +441,7 @@
         // 상태 및 샘플 데이터 정의
         // ==========================================
         let selectedTone = 'boss';
+        const DEFAULT_MODEL = 'gemini-3.8-flash';
         const STORAGE_KEYS = {
             API_KEY: 'email_polisher_api_key',
             MODEL: 'email_polisher_model',
@@ -498,6 +500,13 @@
                     handleConvert();
                 }
             });
+
+            // ESC 키로 모달 닫기
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeSettingsModal();
+                }
+            });
         });
 
         // ==========================================
@@ -511,7 +520,6 @@
             document.getElementById('optUrgent').checked = sample.urgent;
             document.getElementById('optAttachment').checked = sample.attachment;
 
-            // 톤 버튼 활성화
             const targetBtn = document.querySelector(`.tone-btn[data-tone="${sample.tone}"]`);
             if (targetBtn) targetBtn.click();
 
@@ -523,7 +531,7 @@
             document.getElementById('rawInput').focus();
         }
 
-        function showToast(message, icon = '✅') {
+        function showToast(message, icon = '✅', duration = 2600) {
             const toast = document.getElementById('toast');
             document.getElementById('toastMessage').textContent = message;
             document.getElementById('toastIcon').textContent = icon;
@@ -535,10 +543,18 @@
             window.toastTimer = setTimeout(() => {
                 toast.classList.remove('opacity-100', 'translate-y-0');
                 toast.classList.add('opacity-0', 'translate-y-2');
-            }, 2400);
+            }, duration);
         }
 
-        function copyToClipboardFallback(text) {
+        async function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch (e) {
+                    // Fallback below
+                }
+            }
             const textarea = document.createElement('textarea');
             textarea.value = text;
             textarea.style.position = 'fixed';
@@ -555,26 +571,28 @@
             }
         }
 
-        function copyText(elementId, successMsg) {
+        async function copyText(elementId, successMsg) {
             const el = document.getElementById(elementId);
             if (!el || !el.value.trim()) {
                 showToast('복사할 내용이 없습니다.', '⚠️');
                 return;
             }
-            if (copyToClipboardFallback(el.value)) {
+            if (await copyToClipboard(el.value)) {
                 showToast(successMsg, '📋');
             }
         }
 
-        function copyAll() {
+        async function copyAll() {
             const subject = document.getElementById('outputSubject').value.trim();
             const body = document.getElementById('outputBody').value.trim();
             if (!subject && !body) {
                 showToast('복사할 내용이 없습니다.', '⚠️');
                 return;
             }
-            const fullText = `제목: ${subject}\n\n${body}`;
-            if (copyToClipboardFallback(fullText)) {
+            const fullText = `제목: ${subject}
+
+${body}`;
+            if (await copyToClipboard(fullText)) {
                 showToast('제목과 본문이 모두 복사되었습니다!', '✨');
             }
         }
@@ -595,21 +613,39 @@
             const customInput = document.getElementById('customModelInput');
             if (select.value === 'custom') {
                 customInput.classList.remove('hidden');
+                customInput.focus();
             } else {
                 customInput.classList.add('hidden');
             }
         }
 
+        function getActiveModelName() {
+            const savedModel = localStorage.getItem(STORAGE_KEYS.MODEL) || DEFAULT_MODEL;
+            const customModel = (localStorage.getItem(STORAGE_KEYS.CUSTOM_MODEL) || '').trim();
+            if (savedModel === 'custom') {
+                return customModel || DEFAULT_MODEL;
+            }
+            return savedModel;
+        }
+
         function loadSettingsUI() {
             const apiKey = localStorage.getItem(STORAGE_KEYS.API_KEY) || '';
-            const model = localStorage.getItem(STORAGE_KEYS.MODEL) || 'gemini-2.5-flash';
-            const customModel = localStorage.getItem(STORAGE_KEYS.CUSTOM_MODEL) || '';
+            let model = localStorage.getItem(STORAGE_KEYS.MODEL) || DEFAULT_MODEL;
+            let customModel = localStorage.getItem(STORAGE_KEYS.CUSTOM_MODEL) || '';
             const thinking = localStorage.getItem(STORAGE_KEYS.THINKING) || 'fast';
             const userDept = localStorage.getItem(STORAGE_KEYS.USER_DEPT) || '';
             const userName = localStorage.getItem(STORAGE_KEYS.USER_NAME) || '';
 
+            const selectEl = document.getElementById('modelSelect');
+            const validOptions = Array.from(selectEl.options).map(opt => opt.value);
+
+            if (!validOptions.includes(model)) {
+                customModel = model;
+                model = 'custom';
+            }
+
             document.getElementById('apiKeyInput').value = apiKey;
-            document.getElementById('modelSelect').value = model;
+            selectEl.value = model;
             document.getElementById('customModelInput').value = customModel;
             document.getElementById('userDeptInput').value = userDept;
             document.getElementById('userNameInput').value = userName;
@@ -618,7 +654,7 @@
             const radio = document.querySelector(`input[name="thinkingMode"][value="${thinking}"]`);
             if (radio) radio.checked = true;
 
-            updateModeBadge(apiKey, model === 'custom' ? customModel : model);
+            updateModeBadge(apiKey, model === 'custom' ? (customModel || DEFAULT_MODEL) : model);
         }
 
         function saveSettings() {
@@ -629,6 +665,12 @@
             const userDept = document.getElementById('userDeptInput').value.trim();
             const userName = document.getElementById('userNameInput').value.trim();
 
+            if (model === 'custom' && !customModel) {
+                showToast('직접 입력할 모델명을 입력해주세요.', '⚠️');
+                document.getElementById('customModelInput').focus();
+                return;
+            }
+
             localStorage.setItem(STORAGE_KEYS.API_KEY, apiKey);
             localStorage.setItem(STORAGE_KEYS.MODEL, model);
             localStorage.setItem(STORAGE_KEYS.CUSTOM_MODEL, customModel);
@@ -636,7 +678,7 @@
             localStorage.setItem(STORAGE_KEYS.USER_DEPT, userDept);
             localStorage.setItem(STORAGE_KEYS.USER_NAME, userName);
 
-            updateModeBadge(apiKey, model === 'custom' ? (customModel || 'gemini-2.5-flash') : model);
+            updateModeBadge(apiKey, model === 'custom' ? customModel : model);
             closeSettingsModal();
             showToast('설정이 저장되었습니다!', '⚙️');
         }
@@ -669,7 +711,7 @@
 
             const isUrgent = document.getElementById('optUrgent').checked;
             const hasAttachment = document.getElementById('optAttachment').checked;
-            const apiKey = localStorage.getItem(STORAGE_KEYS.API_KEY) || '';
+            const apiKey = (localStorage.getItem(STORAGE_KEYS.API_KEY) || '').trim();
 
             setLoading(true, apiKey ? 'Gemini AI가 비즈니스 문장으로 완전히 재구성 중...' : '의도를 파악하여 공손한 비즈니스 문장으로 재작성 중...');
 
@@ -678,7 +720,7 @@
                 if (apiKey) {
                     result = await callGeminiAPI(apiKey, rawText, selectedTone, isUrgent, hasAttachment);
                 } else {
-                    await new Promise(r => setTimeout(r, 450));
+                    await new Promise(r => setTimeout(r, 400));
                     result = runDemoPolisher(rawText, selectedTone, isUrgent, hasAttachment);
                 }
 
@@ -697,7 +739,7 @@
                 showToast('비즈니스 메일로 완벽히 변환되었습니다!', '✨');
             } catch (error) {
                 console.error('Conversion error:', error);
-                showToast(error.message || '변환 중 오류가 발생했습니다. API 설정을 확인해주세요.', '❌');
+                showToast(error.message || '변환 중 오류가 발생했습니다. API 설정을 확인해주세요.', '❌', 4500);
             } finally {
                 setLoading(false);
             }
@@ -719,12 +761,12 @@
         }
 
         async function callGeminiAPI(apiKey, rawText, tone, isUrgent, hasAttachment) {
-            const savedModel = localStorage.getItem(STORAGE_KEYS.MODEL) || 'gemini-2.5-flash';
-            const customModel = localStorage.getItem(STORAGE_KEYS.CUSTOM_MODEL) || 'gemini-2.5-flash';
-            const modelName = savedModel === 'custom' ? customModel : savedModel;
+            const modelName = getActiveModelName();
             const thinkingMode = localStorage.getItem(STORAGE_KEYS.THINKING) || 'fast';
-            const deptText = localStorage.getItem(STORAGE_KEYS.USER_DEPT) || '[소속]';
-            const nameText = localStorage.getItem(STORAGE_KEYS.USER_NAME) || '[이름]';
+            const userDept = (localStorage.getItem(STORAGE_KEYS.USER_DEPT) || '').trim();
+            const userName = (localStorage.getItem(STORAGE_KEYS.USER_NAME) || '').trim();
+            const deptText = userDept || '[소속]';
+            const nameText = userName || '[이름]';
 
             const toneDescriptions = {
                 boss: '직장 상사나 임원에게 보내는 보고/요청 메일. 극존칭을 사용하며, 핵심을 명확하고 간결하게 전달할 것.',
@@ -769,44 +811,58 @@ ${bodyTemplateRule}
 
 [수신자 및 톤앤매너 지침]
 ${toneDescriptions[tone]}
-${extraRules.join('\n')}
+${extraRules.join('
+')}
 
 [출력 형식 규칙]
 반드시 아래 JSON 형식으로만 응답하세요. 마크다운 코드블록(\`\`\`)이나 부연 설명은 절대 포함하지 마세요.
 {
   "subject": "이메일 제목 (예: [요청] 관련 자료 송부 및 검토 요청의 건)",
-  "body": "위 필수 이메일 양식 템플릿을 그대로 따른 본문 전체 (줄바꿈은 \\n 사용)"
+  "body": "위 필수 이메일 양식 템플릿을 그대로 따른 본문 전체 (줄바꿈은 \n 사용)"
 }`;
 
             const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelName)}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
-            // 모델별 최적화된 thinkingConfig 구성
-            const thinkingConfig = modelName.includes('hydrogen')
-                ? { thinkingLevel: thinkingMode === 'fast' ? 'low' : 'medium' }
-                : { thinkingBudget: thinkingMode === 'fast' ? 256 : 1024 };
-
-            const requestBody = {
+            const basePayload = {
                 systemInstruction: {
                     parts: [{ text: systemPrompt }]
                 },
                 contents: [
                     {
                         role: 'user',
-                        parts: [{ text: `다음 메모의 의도를 파악해서 정중한 비즈니스 이메일로 완전히 새로 작성해줘:\n"${rawText}"` }]
+                        parts: [{ text: `다음 메모의 의도를 파악해서 정중한 비즈니스 이메일로 완전히 새로 작성해줘:
+"${rawText}"` }]
                     }
                 ],
                 generationConfig: {
                     temperature: 0.4,
                     responseMimeType: "application/json",
-                    thinkingConfig: thinkingConfig
+                    thinkingConfig: {
+                        thinkingBudget: thinkingMode === 'fast' ? 256 : 1024
+                    }
                 }
             };
 
-            const response = await fetch(endpoint, {
+            let response = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestBody)
+                body: JSON.stringify(basePayload)
             });
+
+            // 일부 모델에서 thinkingConfig 파라미터가 미지원될 경우 thinkingConfig 제거 후 자동 재시도
+            if (!response.ok && response.status === 400) {
+                const errPreview = await response.clone().json().catch(() => ({}));
+                const errMsg = (errPreview.error?.message || '').toLowerCase();
+                if (errMsg.includes('thinking')) {
+                    const fallbackPayload = JSON.parse(JSON.stringify(basePayload));
+                    delete fallbackPayload.generationConfig.thinkingConfig;
+                    response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(fallbackPayload)
+                    });
+                }
+            }
 
             if (!response.ok) {
                 const errData = await response.json().catch(() => ({}));
@@ -816,36 +872,47 @@ ${extraRules.join('\n')}
 
             const data = await response.json();
             const rawOutput = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-            
-            try {
-                const cleaned = rawOutput.replace(/```json/g, '').replace(/```/g, '').trim();
-                const parsed = JSON.parse(cleaned);
-                return {
-                    subject: parsed.subject || '[업무 연락] 전달의 건',
-                    body: parsed.body || rawOutput
-                };
-            } catch (e) {
-                const lines = rawOutput.split('\n').filter(l => l.trim());
-                return {
-                    subject: lines[0]?.replace(/^제목:\s*/, '') || '[업무 연락] 문의 및 요청의 건',
-                    body: lines.slice(1).join('\n') || rawOutput
-                };
+
+            if (!rawOutput) {
+                throw new Error('AI 응답이 비어 있습니다. 입력 내용을 조금 수정한 뒤 다시 시도해주세요.');
             }
+            
+            let subject = '[업무 연락] 전달의 건';
+            let body = rawOutput;
+
+            try {
+                const cleaned = rawOutput.replace(/```json/gi, '').replace(/```/g, '').trim();
+                const parsed = JSON.parse(cleaned);
+                subject = parsed.subject || subject;
+                body = parsed.body || rawOutput;
+            } catch (e) {
+                const lines = rawOutput.split('
+').filter(l => l.trim());
+                subject = lines[0]?.replace(/^제목:\s*/, '') || '[업무 연락] 문의 및 요청의 건';
+                body = lines.slice(1).join('
+') || rawOutput;
+            }
+
+            if (userDept) {
+                body = body.replace(/\[소속\]/g, userDept);
+            }
+            if (userName) {
+                body = body.replace(/\[이름\]/g, userName);
+            }
+
+            return { subject, body };
         }
 
         // ==========================================
         // 지능형 의도 분석 및 문장 재구성 엔진 (체험 모드 전용)
-        // 원문의 반말/구어체를 그대로 쓰지 않고 의도·대상·행동을 파싱하여 완전히 재작성
         // ==========================================
         function runDemoPolisher(rawText, tone, isUrgent, hasAttachment) {
-            const deptText = localStorage.getItem(STORAGE_KEYS.USER_DEPT) || '[소속]';
-            const nameText = localStorage.getItem(STORAGE_KEYS.USER_NAME) || '[이름]';
+            const deptText = (localStorage.getItem(STORAGE_KEYS.USER_DEPT) || '').trim() || '[소속]';
+            const nameText = (localStorage.getItem(STORAGE_KEYS.USER_NAME) || '').trim() || '[이름]';
 
-            // 1. 수신자 호칭 추출 (없으면 사용자 기본 양식인 '담당자님' 사용)
             const nameMatch = rawText.match(/([가-힣]{2,4}(?:님|대리님|과장님|차장님|팀장님|부장님|실장님|본부장님|이사님|상무님|전무님|대표님|매니저님|주임님|선임님|책임님|프로님))/);
             const recipient = nameMatch ? nameMatch[1] : '담당자님';
 
-            // 2. 핵심 목적어/명사구 추출 (예: "첨부파일", "견적서", "회의 일정", "기획안" 등)
             const topicPatterns = [
                 /(견적서|제안서|기획안|보고서|계약서|발주서|명세서|회의록|일정표|포트폴리오|자료|데이터|파일|첨부파일|문서|초안|수정본|최종본)/,
                 /(주간회의|월간회의|미팅|회의|일정|스케줄|납기|마감|결재|승인|예산|비용|단가|견적|프로젝트|업무)/
@@ -859,20 +926,20 @@ ${extraRules.join('\n')}
                 }
             }
 
-            // 3. 시간/기한 표현 추출 (예: "오늘 5시", "내일 오전", "오후 3시", "금주 내")
             const timeMatch = rawText.match(/(오늘\s*\d+시|금일\s*\d+시|내일\s*(?:오전|오후)?\s*\d*시?|모레|이번\s*주|금주|오전\s*\d+시|오후\s*\d+시|\d+시까지|\d+월\s*\d+일)/);
             const extractedTime = timeMatch ? timeMatch[1].replace(/까지$/, '') : '';
 
-            // 4. 사용자 발화 의도(Intent) 분류
             const hasSendIntent = /(보내|송부|전달|첨부|공유|올려|넘겨|드리)/.test(rawText);
             const hasCheckIntent = /(확인|검토|봐줘|봐주|체크|피드백|검수|승인|결재|읽어)/.test(rawText);
             const hasResendIntent = /(깨져|오류|안\s*열|다시\s*보내|재송부|누락|빠졌)/.test(rawText);
             const hasScheduleIntent = /(미루|변경|조정|연기|취소|당기|시간|일정|회의|미팅)/.test(rawText);
             const hasRejectIntent = /(비싸|예산|어려울|어렵|불가|거절|못할|힘들|안될|다음에|죄송|미안|늦어|지연)/.test(rawText);
 
-            // 5. 사용자 고정 양식 기반 인사말 & 맺음말 블록
-            const headerBlock = `${recipient}, 안녕하세요.\n${deptText}, ${nameText} 입니다.`;
-            const footerBlock = `감사합니다.\n\n${nameText} 드림`;
+            const headerBlock = `${recipient}, 안녕하세요.
+${deptText}, ${nameText} 입니다.`;
+            const footerBlock = `감사합니다.
+
+${nameText} 드림`;
 
             const urgentSentenceMap = {
                 boss: extractedTime
@@ -887,7 +954,6 @@ ${extraRules.join('\n')}
                 apology: `너그러운 양해 부탁드리며, 빠른 시일 내에 다시 말씀드리겠습니다.`
             };
 
-            // 6. 의도(Intent) 기반 완전 재작성 문장 조립 ("다름이 아니라 ~"로 시작)
             let subject = '';
             let coreParagraphs = [];
 
@@ -946,7 +1012,7 @@ ${extraRules.join('\n')}
             } else {
                 const cleanedTopic = rawText
                     .replace(nameMatch ? nameMatch[0] : '', '')
-                    .replace(/(해줘요|해줘|해주세요|좀|부탁해|부탁해요|할게|할게요|보내니까|보낼게|확인해|봐줘|알려줘|알려줘요|야|어|지|임|함|됨)[.?!~]*$/g, '')
+                    .replace(/(해줘요|해줘|해주세요|좀|부탁해|부탁해요|할게|할게요|보내니까|보낼게|확인해|봐줘|알려줘|알려줘요|주셈|줘|야|어|지|임|함|됨)[.?!~]*$/g, '')
                     .trim();
 
                 const subjectNoun = cleanedTopic.length > 18 ? extractedTopic : (cleanedTopic || extractedTopic);
@@ -972,10 +1038,12 @@ ${extraRules.join('\n')}
             const body = [
                 headerBlock,
                 '',
-                coreParagraphs.join('\n'),
+                coreParagraphs.join('
+'),
                 '',
                 footerBlock
-            ].join('\n');
+            ].join('
+');
 
             return { subject, body };
         }
