@@ -602,7 +602,7 @@
 
         function loadSettingsUI() {
             const apiKey = localStorage.getItem(STORAGE_KEYS.API_KEY) || '';
-            const model = localStorage.getItem(STORAGE_KEYS.MODEL) || 'gemini-4-hydrogen';
+            const model = localStorage.getItem(STORAGE_KEYS.MODEL) || 'gemini-2.5-flash';
             const customModel = localStorage.getItem(STORAGE_KEYS.CUSTOM_MODEL) || '';
             const thinking = localStorage.getItem(STORAGE_KEYS.THINKING) || 'fast';
             const userDept = localStorage.getItem(STORAGE_KEYS.USER_DEPT) || '';
@@ -636,7 +636,7 @@
             localStorage.setItem(STORAGE_KEYS.USER_DEPT, userDept);
             localStorage.setItem(STORAGE_KEYS.USER_NAME, userName);
 
-            updateModeBadge(apiKey, model === 'custom' ? (customModel || 'gemini-4-hydrogen') : model);
+            updateModeBadge(apiKey, model === 'custom' ? (customModel || 'gemini-2.5-flash') : model);
             closeSettingsModal();
             showToast('설정이 저장되었습니다!', '⚙️');
         }
@@ -719,8 +719,8 @@
         }
 
         async function callGeminiAPI(apiKey, rawText, tone, isUrgent, hasAttachment) {
-            const savedModel = localStorage.getItem(STORAGE_KEYS.MODEL) || 'gemini-4-hydrogen';
-            const customModel = localStorage.getItem(STORAGE_KEYS.CUSTOM_MODEL) || 'gemini-4-hydrogen';
+            const savedModel = localStorage.getItem(STORAGE_KEYS.MODEL) || 'gemini-2.5-flash';
+            const customModel = localStorage.getItem(STORAGE_KEYS.CUSTOM_MODEL) || 'gemini-2.5-flash';
             const modelName = savedModel === 'custom' ? customModel : savedModel;
             const thinkingMode = localStorage.getItem(STORAGE_KEYS.THINKING) || 'fast';
             const deptText = localStorage.getItem(STORAGE_KEYS.USER_DEPT) || '[소속]';
