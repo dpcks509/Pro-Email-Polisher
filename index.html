@@ -1036,12 +1036,10 @@ ${nameText} 드림`;
             const body = [
                 headerBlock,
                 '',
-                coreParagraphs.join('
-\n'),
+                coreParagraphs.join('\n'),
                 '',
                 footerBlock
-            ].join('
-');
+            ].join('\n');
 
             return { subject, body };
         }
