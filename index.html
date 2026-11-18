@@ -812,7 +812,7 @@ ${bodyTemplateRule}
 [수신자 및 톤앤매너 지침]
 ${toneDescriptions[tone]}
 ${extraRules.join('
-')}
+\n')}
 
 [출력 형식 규칙]
 반드시 아래 JSON 형식으로만 응답하세요. 마크다운 코드블록(\`\`\`)이나 부연 설명은 절대 포함하지 마세요.
@@ -890,7 +890,7 @@ ${extraRules.join('
 ').filter(l => l.trim());
                 subject = lines[0]?.replace(/^제목:\s*/, '') || '[업무 연락] 문의 및 요청의 건';
                 body = lines.slice(1).join('
-') || rawOutput;
+\n') || rawOutput;
             }
 
             if (userDept) {
@@ -1039,7 +1039,7 @@ ${nameText} 드림`;
                 headerBlock,
                 '',
                 coreParagraphs.join('
-'),
+\n'),
                 '',
                 footerBlock
             ].join('
